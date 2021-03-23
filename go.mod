@@ -1,3 +1,3 @@
-module github.com/Arpeet-gupta/go-concurrency/v2
+module github.com/Arpeet-gupta/go-concurrency/v3
 
 go 1.15

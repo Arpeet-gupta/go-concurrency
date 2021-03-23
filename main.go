@@ -2,17 +2,37 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 func main() {
-	fmt.Println("main execution started")
-	c := make(chan string)
-	//creating go-routines
-	go func() {
-		fmt.Println("hello " + <-c + " from anonymous goroutine")
-	}()
+	c := producer()
+	go consumer(c)
 
-	c <- "Arpeet"
-	// time.Sleep(10 * time.Millisecond)
-	fmt.Println("main execution stopped")
+	time.Sleep(1 * time.Millisecond)
+
+}
+
+func producer() chan int {
+	out := make(chan int)
+	go func() {
+		fmt.Println("Hello, I am a Producer")
+		for i := 0; i < 20; i++ {
+			out <- i * 2
+		}
+		close(out)
+	}()
+	return out
+}
+
+func consumer(in <-chan int) {
+	fmt.Println("Hello I am a consumer")
+	for {
+		select {
+		case v := <-in:
+			fmt.Println(v)
+		default:
+			fmt.Println("Waiting for value from Producer")
+		}
+	}
 }
